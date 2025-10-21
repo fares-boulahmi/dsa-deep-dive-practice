@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <climits>
 using namespace std;
 
 // Node structure for linked list
@@ -1223,168 +1225,205 @@ void problem9_3(Node *&head, int k)
     //     }
     //     // solving something else didn't understand the problem
     // }
+
     /*
-        start time : 08:34
-        stop at : 09:50
-        return at : 10:29
+        start time : 09:18
+        end time : 10:52
+        solve in case k is 3 will do it again
     */
     /*
-         i have to save the third node to return the new head
-         save the start node of every reverse loop
-         save the head and tail of every loop if the tail after loop of two next become nullptr the loop end
+         plan : have to return the head if there 3 nodes or more the test function use head after that have to make a stop
+        condition for next loop less than 3 nodes after that change the point of the three nodes to point reverse and make the old head point to new head
+        or other word the tail of next loop
+        most have the prev head that will point to the new head (tail in the new loop)
+        and current head that can store the next and change the point
+
+    */
+    /*  if (head != nullptr)
+     {
+         Node *prevH = head;
+         Node *currH = head;
+         Node *tail = head;
+         int check = 2;
+         while (check)
+         {
+             tail = tail->next;
+             if (tail == nullptr)
+             {
+                 check = 0;
+             }
+             else
+             {
+
+                 check--;
+             }
+         }
+         if (tail != nullptr)
+         {
+             // a -> b -> c -> d -> f
+             // make the head is the third nodes
+             head = tail; // head = c
+             // the prev head next is second node her next is the currH old head
+             prevH->next->next = currH; // b-> a
+             // new the current head is the the tail next nodes the fourth node
+             currH = tail->next; // currH = c->d = d
+             // the tail next is the second node
+             tail->next = prevH->next; // c-> b
+             // make the tail is the fourth node that stored
+             tail = currH; // d
+             prevH->next = nullptr;
+             check = 2;
+             // tail = nullptr;
+             while (tail != nullptr)
+             {
+                 tail = currH; // d
+                 cout << "haloo " << endl;
+                 check = 2;
+                 while (check)
+                 {
+                     cout << tail->data << endl;
+
+                     tail = tail->next;
+                     if (tail != nullptr)
+                     {
+                         check--;
+                     }
+                     else
+                     {
+                         check = 0;
+                     }
+                 }
+                 if (tail == nullptr)
+                 {
+                     prevH->next = currH;
+                 }
+                 else
+                 {
+                     // a -> b -> c -> d -> f -> g -> h
+                     // prev = a | currH = d | tail = g
+                     // the head from loop before or first init next become the tail ( the new head of the loop )
+                     prevH->next = tail; // a -> * = g
+                     // the second node next become the first node
+                     currH->next->next = currH; // d->f -> * = d
+                     // tail the new head his next is the second node in the loop
+                     prevH = currH;            // d
+                     currH = tail->next;       // h
+                     tail->next = prevH->next; // g -> * = d -> f
+                     // make the prev head the current head for next loop
+                     // make the next head is the first node from next chain
+                 }
+             }
+             currH = head;
+             int stop = 20;
+             while (currH != nullptr)
+             {
+                 cout << currH->data;
+                 if (currH->next == nullptr)
+                 {
+                     cout << endl;
+                 }
+                 else
+                 {
+                     cout << " -> ";
+                 }
+                 currH = currH->next;
+             }
+         }
+     } */
+    /*
+        the problem for what need group of k number
+        start time : 11:09
+        end time : 13:00
     */
     if (head != nullptr)
     {
-        int total = 0;
-        Node *currentHead = head;
-        Node *prevHead = nullptr;
+        Node *prevH = head;
+        Node *prevNode = nullptr;
+        Node *currNode = head;
+        Node *nextNode = head->next;
         Node *tail = head;
-        Node *nextNode = head;
-        // Node * current = head;
-        int i = 2;
-        while (i)
+        int check = k - 1;
+        // get the k node
+        while (check)
         {
-            if (currentHead->next == nullptr)
+            if (tail->next == nullptr)
             {
-                i = 0;
+                check = 0;
             }
             else
             {
-                currentHead = currentHead->next;
-                i--;
+
+                check--;
+                tail = tail->next;
             }
         }
-        if (currentHead != nullptr)
+        // make the head is the k node and the first previous node is k+1 node
+        head = tail;
+        prevNode = tail->next;
+        tail = tail->next;
+        // reverse the nodes for O(k)
+        check = k;
+        while (check)
         {
-            head = currentHead;
-            currentHead = nextNode;
-            while (tail != nullptr)
+            currNode->next = prevNode;
+            prevNode = currNode;
+            currNode = nextNode;
+            if (nextNode == nullptr)
             {
-                cout << "the current tail is "  << tail->data << endl;
-                i = 2;
-                while (i)
-                {
-                    if (tail->next == nullptr)
-                    {
-                        tail = nullptr;
-                        i = 0;
-                    }
-                    else
-                    {
-                        tail = tail->next;
-                        i--;
-                    }
-                }
-                /*   if (prevHead != nullptr)
-                  {
-                      prevHead->next = currentHead;
-                      prevHead = currentHead;
-                  } else {
-                      prevHead = currentHead;
-                  }
-                  nextNode = currentHead->next;
-                  nextNode->next = currentHead;
-                  currentHead = tail->next;
-                  tail->next = nextNode;
-                  tail = currentHead; */
-                  if (tail != nullptr) {
-
-                      if (prevHead != nullptr)
-                      {
-                          prevHead->next = tail;
-                          cout << "prevHead is not null, setting prevHead->next to currentHead: " << prevHead->data << " | " << tail->data << endl;
-                          
-                          prevHead = currentHead;
-                          cout << "Updated prevHead to currentHead: " << prevHead->data << endl;
-                        }
-                        else
-                        {
-                            prevHead = currentHead;
-                            cout << "prevHead was null, now set to currentHead: " << prevHead->data << endl;
-                        }
-                        
-                        nextNode = currentHead->next;
-                        cout << "Set nextNode to currentHead->next: " << nextNode->data << endl;
-                        
-                        currentHead->next = nullptr;
-                        nextNode->next = currentHead;
-                        cout << "Set nextNode->next to currentHead: " << currentHead->data << endl;
-                        
-                        currentHead = tail->next;
-                        cout << "Updated currentHead to tail->next: " << currentHead->data << endl;
-                        
-                        tail->next = nextNode;
-                        cout << "Set tail->next to nextNode: " << nextNode->data << endl;
-                        
-                        tail = currentHead;
-                        cout << "Moved tail to currentHead: " << tail->data << endl;
-                        if (tail->next == nullptr)
-                        {
-                            prevHead->next = tail ;
-                            tail->next = nullptr;
-                            /* code */
-                        }
-                    }
-                
-                
-                /*  ne = current->next;
-                 // current->next = tail->next;
-                 nextHead->next = current;
-                 current = tail;
-                 tail->next = nextHead;
-                 tail = current->next;
-                 current = tail;
-                 cout << "work " << endl; */
-
-                /*  cout << "before the if workded " << endl;
-                 tempHead->next = tail;
-                 tempHead = current;
-                 if (tail != nullptr)
-                 {
-                     cout << "tail is  " << tail->data << endl;
-                     // point the next head to head in new cycel
-                     nextHead = tail->next;
-                     // make the tail point to middle one
-                     tail->next = tempHead->next;
-                     // make the current is the middle one
-                     current = tempHead->next;
-                     // make the middle point to head
-                     current->next = tempHead;
-                     // make the old head point to next new head
-                     // tempHead->next = nextHead; // and this the wrong one
-                     // return the temp head to the head of next cycel
-                     current = nextHead;
-                     tail = nextHead;
-                     cout << "ended " << endl;
-
-                 } */
+                check = 0;
             }
-            // currentHead = head;
-            // while (currentHead != nullptr)
-            // {
-            //     cout << currentHead->data;
-            //     if (currentHead->next == nullptr)
-            //     {
-            //         cout << endl;
-            //     }
-            //     else
-            //     {
-            //         cout << " -> ";
-            //     }
-            //     currentHead = currentHead->next;
-            // }
+            else
+            {
+                nextNode = nextNode != nullptr ? nextNode->next : nullptr;
+                check--;
+            }
         }
-        // while (current != nullptr)
-        // {
-        //     total++;
-        //     current = current->next;
-        // }
-        // current = head;
-        // total = total / k;
-        // while (0)
-        // {
-        //     /* code */
-        // }
+        currNode = tail;
+        prevH->next = currNode;
+        // if still nodes proccess
+        while (tail != nullptr)
+        {
+            check = k - 1;
+            while (check)
+            {
+                tail = tail->next;
+                if (tail != nullptr)
+                {
+                    check--;
+                }
+                else
+                {
+                    check = 0;
+                }
+            }
+            // if the nodes less than k will stop and return nullpt
+            // point the previous head the current node in chain
+            if (tail == nullptr)
+            {
+                prevH->next = currNode;
+            }
+            else
+            {
+                // make the prev head point to tail the new head of this chain
+                prevH->next = tail;
+                // move the prev head to current node to become the next previous head
+                prevH = currNode;
+                prevNode = tail->next;
+                nextNode = currNode->next;
+                tail = tail->next;
+                check = k;
+                // reverse the node for O(k)
+                while (check)
+                {
+                    currNode->next = prevNode;
+                    prevNode = currNode;
+                    currNode = nextNode;
+                    nextNode = nextNode != nullptr ? nextNode->next : nullptr;
+                    check--;
+                }
+                currNode = tail;
+            }
+        }
     }
 }
 
@@ -1400,6 +1439,28 @@ void problem10_1(Node *head)
 {
     // TODO: Implement displaying list
     // Hint: Traverse list printing each value with arrow, print NULL at end
+    /*
+        time start : 19:46
+        end time : 19:48
+    */
+    if (head != nullptr)
+    {
+        Node *current = head;
+        while (current != nullptr)
+        {
+            cout << current->data;
+            if (current->next == nullptr)
+            {
+                cout << endl;
+            }
+            else
+            {
+                cout << " -> ";
+            }
+
+            current = current->next;
+        }
+    }
 }
 
 // Problem 10.2 (Easy): Display List in Reverse Order
@@ -1411,6 +1472,27 @@ void problem10_2(Node *head)
 {
     // TODO: Implement displaying list in reverse without modifying it
     // Hint: Use recursion or store values in array then print backwards
+    /*
+        time start : 19:50;
+        end time : 19:55
+    */
+
+    if (head != nullptr)
+    {
+        vector<int> list;
+        Node *current = head;
+        while (current != nullptr)
+        {
+            list.push_back(current->data);
+            current = current->next;
+        }
+        int lenList = list.size();
+        for (int i = 0; i < lenList; i++)
+        {
+            cout << list[lenList - i - 1] << " -> ";
+        }
+        cout << "NULL" << endl;
+    }
 }
 
 // Problem 10.3 (Medium): Display Nodes at Even Positions
@@ -1421,6 +1503,28 @@ void problem10_3(Node *head)
 {
     // TODO: Implement displaying nodes at even positions
     // Hint: Traverse with position counter, print only when position is even
+    /*
+        start time : 19:57
+        end time : 20:02
+    */
+    if (head != nullptr)
+    {
+        Node *current = head;
+        int check = 0;
+        while (current != nullptr)
+        {
+            if ((check % 2) == 0)
+            {
+                cout << current->data << " -> ";
+            }
+            if (current->next == nullptr)
+            {
+                cout << "NULL" << endl;
+            }
+            current = current->next;
+            check++;
+        }
+    }
 }
 
 // ============================================================================
@@ -1435,7 +1539,24 @@ int problem11_1(Node *&head)
 {
     // TODO: Implement deleting all nodes
     // Hint: Loop deleting first node until list is empty, count deletions
-    return 0;
+    /*
+        time start : 20:03
+        end time : 20:05
+    */
+    if (head == nullptr)
+        return 0;
+    int total = 0;
+    Node *current = head;
+    Node *NodeToDelet = current;
+    while (current != nullptr)
+    {
+        NodeToDelet = current;
+        current = current->next;
+        delete NodeToDelet;
+        total++;
+    }
+    head = nullptr;
+    return total;
 }
 
 // Problem 11.2 (Easy): Delete All Nodes with Specific Value
@@ -1446,7 +1567,35 @@ int problem11_2(Node *&head, int target)
 {
     // TODO: Implement deleting all nodes with specific value
     // Hint: Handle head nodes with target, then traverse deleting matching nodes
-    return 0;
+    /*
+        start time : 20:06
+        end time : 20:13
+    */
+    if (head == nullptr)
+        return 0;
+    Node *current = head;
+    Node *nodeToDelete = head;
+    Node* prevNode = head;
+    int total = 0;
+    while (current != nullptr)
+    {
+        nodeToDelete = current;
+        if (nodeToDelete->data == target)
+        {
+            current = nodeToDelete->next;
+            prevNode->next = current;
+            if (head->data == target) {
+                head = current;
+            }
+            delete nodeToDelete;
+            total++;
+        } else {
+            prevNode = current;
+            current = current->next;
+        }
+    }
+
+    return total;
 }
 
 // Problem 11.3 (Medium): Clear List and Return Statistics
@@ -1458,6 +1607,46 @@ void problem11_3(Node *&head, int result[3])
 {
     // TODO: Implement clearing list and returning statistics
     // Hint: Calculate stats while traversing, then delete all nodes
+    /* 
+        start time : 20:13
+        end time : 20:20
+    */
+    if (head == nullptr)
+    {
+        result[0] = -1;
+        result[1] = -1;
+        result[2] = -1;
+    } else {
+        int totalNodes = 0;
+        int sum = 0;
+        int maxV = INT_MIN;
+        Node * current = head ;
+
+        while (current != nullptr)
+        {
+            totalNodes++;
+            sum += current->data;
+            if (current->data > maxV)
+            {
+                maxV = current->data;
+            }
+            current = current->next;
+            
+        }
+        result[0] = totalNodes;
+        result[1] = sum;
+        result[2] = maxV;
+        current = head;
+        Node * nodeToDelete ;
+        while (current != nullptr)
+        {
+            nodeToDelete = current;
+            current = current->next;
+            delete nodeToDelete;
+        }
+        head = nullptr;
+    }
+    
 }
 
 // ============================================================================
@@ -1472,8 +1661,23 @@ Node *problem12_1(int arr[], int size)
 {
     // TODO: Implement converting array to linked list
     // Hint: Loop through array creating and linking nodes
-    Node *newNode = new Node(5);
-    return newNode;
+    /* 
+        start time : 20:21
+        end time : 20:24
+    */
+   if (size == 0) return nullptr;
+   
+   Node * head = new Node(arr[0]);
+   Node * current = head;
+    for (int i = 1; i < size; i++)
+    {
+        Node *newNode = new Node(arr[i]);
+        current->next = newNode;
+        current = current->next;
+        /* code */
+    }
+    
+    return head;
 }
 
 // Problem 12.2 (Easy): Convert Linked List to Array
@@ -1485,7 +1689,29 @@ int *problem12_2(Node *head, int *size)
 {
     // TODO: Implement converting linked list to array
     // Hint: First count nodes, allocate array, then copy values
-    int *temp = nullptr;
+    /* 
+        start time : 20:25
+        end time : 20:36
+    */
+    unsigned int  total = 0;
+    if (head == nullptr) {
+        return nullptr;
+    }
+    Node * current = head ;
+    while (current != nullptr)
+    {
+        total++;
+        current = current->next;
+    }
+    
+    int *temp = new int[total]{};
+    current = head;
+    *size = total;
+    for (unsigned int  i = 0; i < total; i++)
+    {
+        temp[i] = current->data;
+        current = current->next;
+    }
     return temp;
 }
 
@@ -1497,6 +1723,46 @@ Node *problem12_3(Node *list1, Node *list2)
 {
     // TODO: Implement merging two sorted lists
     // Hint: Compare heads, choose smaller, advance that list, repeat
+    // if (list1 == nullptr && list2 == nullptr) return nullptr;
+    // if (list1 == nullptr)
+    // {
+    //     return list2;
+    // } else if (list2 == nullptr) {
+    //     return list1;
+    // }
+    // Node * current ;
+    // Node * current1 = list1;
+    // Node * current2 = list2;
+
+    // if (list1->data > list2->data)
+    // {
+    //     current = list2;
+    //     current2 = current2->next;
+    // } else Node * current ;
+    // if (list2->data > list1->data)
+    // {
+    //     current = list1;
+    //     current1 = current1->next;
+    // }
+    // Node * head = current;
+
+    // while (current != nullptr)
+    // {
+    //     if (current1 != nullptr)
+    //     {
+    //         if (current2 == nullptr) {
+    //             current->next = current1;
+    //             current = nullptr ;
+    //         }  else {
+
+    //         }
+    //     }
+        
+        
+    // }
+    
+
+    
     Node *newNode = new Node(5);
     return newNode;
 }
